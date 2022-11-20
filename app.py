@@ -1,4 +1,3 @@
-import RPi.GPIO as IO
 import time
 from config import *
 from pi_speak import speak
