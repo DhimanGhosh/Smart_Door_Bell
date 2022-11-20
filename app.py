@@ -1,47 +1,47 @@
 import RPi.GPIO as IO
 import time
-import config
+from config import *
 from pi_speak import speak
 
 
-class Smart_Door_Bell:
+class SmartDoorBell:
     def __init__(self) -> None:
-        self.motion_sensor_PIN = config.Pin.MOTION_SENSOR
-        self.piezzo_buzzer_PIN = config.Pin.PIEZZO_BUZZER
-        self.ultrasonic_echo_PIN = config.Pin.ULTRASONIC_ECHO
-        self.ultrasonic_trigger_PIN = config.Pin.ULTRASONIC_TRIGGER
-        self.led_PIN = config.Pin.LED
+        self.motion_sensor_PIN = Pin.MOTION_SENSOR
+        self.piezzo_buzzer_PIN = Pin.PIEZZO_BUZZER
+        self.ultrasonic_echo_PIN = Pin.ULTRASONIC_ECHO
+        self.ultrasonic_trigger_PIN = Pin.ULTRASONIC_TRIGGER
+        self.led_PIN = Pin.LED
 
         self.__setup()
 
     def __setup(self):
-        config.GPIO_Pre_Setup()
-
-        IO.setup(self.motion_sensor_PIN, IO.IN)
-        IO.setup(self.piezzo_buzzer_PIN, IO.OUT)
-
-        IO.setup(self.ultrasonic_echo_PIN, IO.IN)
-        IO.setup(self.ultrasonic_trigger_PIN, IO.OUT)
-
-        IO.setup(self.led_PIN, IO.OUT)
+        GPIO_Pre_Setup()
+        
+        components_setup(self.motion_sensor_PIN, 'in')
+        components_setup(self.piezzo_buzzer_PIN, 'out')
+        
+        components_setup(self.ultrasonic_echo_PIN, 'in')
+        components_setup(self.ultrasonic_trigger_PIN, 'out')
+        
+        components_setup(self.led_PIN, 'out')
 
     def __distance(self):
         # set Trigger to HIGH
-        IO.output(self.ultrasonic_trigger_PIN, True)
+        components_output(self.ultrasonic_trigger_PIN, True)
 
         # set Trigger after 0.01ms to LOW
         time.sleep(0.00001)
-        IO.output(self.ultrasonic_trigger_PIN, False)
+        components_output(self.ultrasonic_trigger_PIN, False)
 
         StartTime = time.time()
         StopTime = time.time()
 
         # save StartTime
-        while IO.input(self.ultrasonic_echo_PIN) == 0:
+        while components_input(self.ultrasonic_echo_PIN) == 0:
             StartTime = time.time()
 
         # save time of arrival
-        while IO.input(self.ultrasonic_echo_PIN) == 1:
+        while components_input(self.ultrasonic_echo_PIN) == 1:
             StopTime = time.time()
 
         # time difference between start and arrival
@@ -52,25 +52,23 @@ class Smart_Door_Bell:
         return distance
 
     def __destroy(self):
-        config.GPIO_Cleanup()
+        GPIO_Cleanup()
 
     def __play_piezo_buzzer_with_led(self):
         dur = .1
         for _ in range(10):
-            IO.output(self.piezzo_buzzer_PIN, True)
-            IO.output(self.led_PIN, True)
+            components_output(self.piezzo_buzzer_PIN, True)
+            components_output(self.led_PIN, True)
             time.sleep(dur)
-            IO.output(self.piezzo_buzzer_PIN, False)
-            IO.output(self.led_PIN, False)
+            components_output(self.piezzo_buzzer_PIN, False)
+            components_output(self.led_PIN, False)
             time.sleep(dur)
 
     def motion_detect_door_bell(self):
         try:
             time.sleep(2)
             while True:
-                print('waiting for motion!')
-                if IO.input(self.motion_sensor_PIN):
-                    print('motion detected!')
+                if components_input(self.motion_sensor_PIN):
                     distance = self.__distance()
                     if distance < 10.0:
                         text = f'Movement Detected at {distance:.1f} cm away'
@@ -84,5 +82,5 @@ class Smart_Door_Bell:
 
 
 if __name__ == '__main__':
-    alarm = Smart_Door_Bell()
+    alarm = SmartDoorBell()
     alarm.motion_detect_door_bell()
