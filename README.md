@@ -4,6 +4,7 @@
 #### Required
 - Raspberry Pi 4B (any version will support)
 - Micro SD Card
+- Raspberry Pi OS (64-bit)
 - HC-SR04
 - PIR Motion Sensor
 - Piezzo Buzzer
