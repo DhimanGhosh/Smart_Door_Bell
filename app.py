@@ -5,5 +5,5 @@ if __name__ == '__main__':
     """
     Driver Code
     """
-    alarm = SmartDoorBell()
-    alarm.motion_detect_door_bell()
+    bell = SmartDoorBell()
+    bell.motion_detect_door_bell()
