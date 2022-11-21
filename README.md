@@ -19,7 +19,7 @@
 - Micro HDMI to HDMI cable
 
 ## Execute
-> Note: Edit [config.ini](https://github.com/DhimanGhosh/Smart_Door_Bell/blob/main/config.ini) and enter the GPIO pins of your setup
+> Note: Edit [config.ini](https://github.com/DhimanGhosh/Smart_Door_Bell/blob/main/config.ini) and enter the GPIO pins of your setup (setup as Pin Numbering)
 ```sh
 chmod +x run.sh
 ./run.sh
